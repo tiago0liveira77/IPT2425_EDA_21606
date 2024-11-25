@@ -7,6 +7,7 @@ package com.ipt.eda21606.model;
 import java.util.*;
 
 public class GraphBean {
+
     private Map<CityBean, List<CityBean>> adjacencies = new HashMap<>();
 
     public void addCity(CityBean city) {
@@ -14,7 +15,13 @@ public class GraphBean {
     }
 
     public void addEdge(CityBean source, CityBean destination) {
+        // Adiciona a conexão de source para destination
+        adjacencies.putIfAbsent(source, new ArrayList<>());
         adjacencies.get(source).add(destination);
+
+        // Adiciona a conexão inversa de destination para source
+        adjacencies.putIfAbsent(destination, new ArrayList<>());
+        adjacencies.get(destination).add(source);
     }
 
     public List<CityBean> getAdjacencies(CityBean city) {
@@ -23,8 +30,12 @@ public class GraphBean {
 
     public void displayGraph() {
         for (Map.Entry<CityBean, List<CityBean>> entry : adjacencies.entrySet()) {
-            System.out.println(entry.getKey().getName() + " -> " +
-                               entry.getValue().stream().map(CityBean::getName).toList());
+            System.out.println(entry.getKey().getName() + " -> "
+                    + entry.getValue().stream().map(CityBean::getName).toList());
         }
+    }
+
+    public Set<CityBean> getCities() {
+        return adjacencies.keySet();
     }
 }
