@@ -15,13 +15,17 @@ public class GraphBean {
     }
 
     public void addEdge(CityBean source, CityBean destination) {
-        // Adiciona a conexão de source para destination
+        // Adiciona a conexão de source para destination, garantindo que não seja duplicada
         adjacencies.putIfAbsent(source, new ArrayList<>());
-        adjacencies.get(source).add(destination);
+        if (!adjacencies.get(source).contains(destination)) {
+            adjacencies.get(source).add(destination);
+        }
 
-        // Adiciona a conexão inversa de destination para source
+        // Adiciona a conexão inversa de destination para source, garantindo que não seja duplicada
         adjacencies.putIfAbsent(destination, new ArrayList<>());
-        adjacencies.get(destination).add(source);
+        if (!adjacencies.get(destination).contains(source)) {
+            adjacencies.get(destination).add(source);
+        }
     }
 
     public List<CityBean> getAdjacencies(CityBean city) {

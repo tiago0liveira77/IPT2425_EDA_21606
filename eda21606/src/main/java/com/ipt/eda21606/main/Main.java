@@ -10,34 +10,28 @@ import com.ipt.eda21606.model.GraphBean;
 import com.ipt.eda21606.service.RouteService;
 import com.ipt.eda21606.util.CSVUtils;
 import static com.ipt.eda21606.util.Constants.INPUT_FILE_PATH;
+import static com.ipt.eda21606.util.DistanceUtils.*;
 import java.util.List;
+import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 public class Main {
-
+    
+    private static final Logger logger = LogManager.getLogger(Main.class);
+    
+    static Map<CityBean, Double> distances;
+    
     public static void main(String[] args) {
-        System.out.println("--> 1 Read Cities");
         List<CityBean> cities = CSVUtils.readCities(INPUT_FILE_PATH);
-        
-        System.out.println("--> 2 Print test Cities");
-        cities.stream().limit(10).forEach(System.out::println);
-        
-        // Build the graph
-        System.out.println("--> 3 Building graph");
         GraphBean graph = RouteService.buildGraph(cities);
-
-        // Display part of the graph to check the connections
-        System.out.println("--> 4 Display grah");
-        graph.displayGraph();
-        
-         // Escolher duas cidades (exemplo)
-        System.out.println("--> 5 Test get closest");
-        CityBean city1 = cities.get(1);  
-        CityBean city2 = cities.get(8); 
-        CityBean city3 = cities.get(4); 
-
         // Criar o algoritmo de Dijkstra e calcular o caminho mais curto
         DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph);
-        dijkstra.findShortestPath(city1, city3);
+        distances = dijkstra.findShortestPath(cities.get(1), cities.get(4));
+        printAllDistances(distances);
+        getClosestCity(distances);
+        
+        
     }
 }

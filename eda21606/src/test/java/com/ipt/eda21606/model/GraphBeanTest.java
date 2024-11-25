@@ -19,9 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GraphBeanTest {
     
     private GraphBean graph;
-    private CityBean lisbon;
-    private CityBean porto;
-    private CityBean faro;
+    private CityBean lisbon, porto, faro, leiria;
     
     public GraphBeanTest() {
     }
@@ -54,10 +52,17 @@ public class GraphBeanTest {
                     .latitude(37.0194)
                     .longitude(-7.9308)
                     .build();
+        
+        leiria = CityBean.builder()
+                    .name("Leiria")
+                    .latitude(37.0194)
+                    .longitude(-7.9308)
+                    .build();
 
         graph.addCity(lisbon);
         graph.addCity(porto);
         graph.addCity(faro);
+        graph.addCity(leiria);
 
         graph.addEdge(lisbon, porto);
         graph.addEdge(lisbon, faro);
@@ -77,8 +82,8 @@ public class GraphBeanTest {
 
     @Test
     void testNoConnection() {
-        List<CityBean> portoAdj = graph.getAdjacencies(porto);
-        assertTrue(portoAdj.isEmpty(), "Porto should not have any connections in this test setup.");
+        List<CityBean> leiriaAdj = graph.getAdjacencies(leiria);
+        assertTrue(leiriaAdj.isEmpty(), "Porto should not have any connections in this test setup.");
     }
     
 }

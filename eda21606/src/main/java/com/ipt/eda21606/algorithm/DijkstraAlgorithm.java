@@ -9,16 +9,23 @@ import com.ipt.eda21606.model.GraphBean;
 import static com.ipt.eda21606.util.Constants.VEHICLE_AUTONOMY_KM;
 import com.ipt.eda21606.util.DistanceUtils;
 import java.util.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class DijkstraAlgorithm {
 
     private GraphBean graph;
+
+    private static final Logger logger = LogManager.getLogger(DijkstraAlgorithm.class);
 
     public DijkstraAlgorithm(GraphBean graph) {
         this.graph = graph;
     }
 
     public Map<CityBean, Double> findShortestPath(CityBean start, CityBean end) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("|-> |FindShortestPath| From: " + start.getName() + " To: " + end.getName());
+        }
         double autonomy = VEHICLE_AUTONOMY_KM;
         Map<CityBean, Double> distances = new HashMap<>(); // Mapa de distâncias mínimas
         Map<CityBean, CityBean> predecessors = new HashMap<>(); // Mapa de predecessores
@@ -37,22 +44,32 @@ public class DijkstraAlgorithm {
 
             if (currentCityBean == null) {
                 // Não há mais cidades conectadas acessíveis
-                System.err.println("No city found with minimum distance. Exiting loop.");
+                if (logger.isDebugEnabled()) {
+                    logger.debug("|---> No city found with minimum distance. Exiting loop.");
+                    logger.debug("|--------------------------------------------------------|");
+                }
                 break;
             }
 
-            System.out.println("Processing city: " + currentCityBean.getName());
-            System.out.println("Current distance: " + distances.get(currentCityBean));
+            if (logger.isDebugEnabled()) {
+                logger.debug("|--> Processing city: " + currentCityBean.getName());
+                logger.debug("|--> Current distance: " + distances.get(currentCityBean));
+            }
 
             // Se a distância da cidade atual for infinita, significa que não há caminho
             if (distances.get(currentCityBean) == Double.POSITIVE_INFINITY) {
-                System.out.println("All remaining cities are unreachable. Exiting loop.");
+                if (logger.isDebugEnabled()) {
+                    logger.debug("|---> All remaining cities are unreachable. Exiting loop.");
+                    logger.debug("|--------------------------------------------------------|");
+                }
                 break;
             }
 
             // Atualiza as distâncias para os vizinhos
             for (CityBean neighbor : graph.getAdjacencies(currentCityBean)) {
-                System.out.println("Checking neighbor: " + neighbor.getName());
+                if (logger.isDebugEnabled()) {
+                    logger.debug("|---> Checking neighbor: " + neighbor.getName());
+                }
 
                 // Calcula a distância entre a cidade atual e o vizinho
                 double edgeDistance = DistanceUtils.calculateDistance(
@@ -62,8 +79,10 @@ public class DijkstraAlgorithm {
 
                 // Verifica se a distância da aresta excede a autonomia
                 if (edgeDistance > autonomy) {
-                    System.out.println("Edge from " + currentCityBean.getName() + " to " + neighbor.getName()
-                            + " exceeds autonomy (" + edgeDistance + " > " + autonomy + "). Skipping.");
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("|---> Edge from " + currentCityBean.getName() + " to " + neighbor.getName()
+                                + " exceeds autonomy (" + edgeDistance + " > " + autonomy + "). Skipping.");
+                    }
                     continue; // Ignora esta aresta
                 }
 
@@ -72,7 +91,9 @@ public class DijkstraAlgorithm {
 
                 // Atualiza a distância mínima se o novo caminho for mais curto
                 if (distance < distances.get(neighbor)) {
-                    System.out.println("Updating distance for " + neighbor.getName() + " to " + distance);
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("|----> Updating distance for " + neighbor.getName() + " to " + distance);
+                    }
                     distances.put(neighbor, distance);
                     predecessors.put(neighbor, currentCityBean);
                 }
@@ -80,7 +101,9 @@ public class DijkstraAlgorithm {
 
             // Marca a cidade atual como visitada
             unvisitedCities.remove(currentCityBean);
-            System.out.println("Remaining unvisited cities: " + unvisitedCities);
+            if (logger.isDebugEnabled()) {
+                logger.debug("|--> Remaining unvisited cities: " + unvisitedCities);
+            }
         }
 
         // Reconstrução do caminho, se necessário
@@ -90,9 +113,37 @@ public class DijkstraAlgorithm {
                 path.add(city);
             }
             Collections.reverse(path);
-            System.out.println("Shortest path: " + path.stream().map(CityBean::getName).toList());
+
+            if (logger.isDebugEnabled()) {
+                logger.debug("|----> Shortest path: " + path.stream().map(CityBean::getName).toList());
+            }
+
+            // Adicionando o log da distância entre cada aresta no caminho
+            if (path.size() > 1 && logger.isDebugEnabled()) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("|----> Edge distances:");
+                }
+                for (int i = 0; i < path.size() - 1; i++) {
+                    CityBean from = path.get(i);
+                    CityBean to = path.get(i + 1);
+                    double edgeDistance = DistanceUtils.calculateDistance(
+                            from.getLatitude(), from.getLongitude(),
+                            to.getLatitude(), to.getLongitude()
+                    );
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("|-------> From " + from.getName() + " to " + to.getName() + ": " + edgeDistance + " km");
+                    }
+                }
+                if (logger.isDebugEnabled()) {
+                    logger.debug("|-------------------------------------------------------------------------------------");
+                }
+            }
+
         } else {
-            System.out.println("No path exists from " + start.getName() + " to " + end.getName());
+            if (logger.isDebugEnabled()) {
+                logger.debug("|----> No path exists from " + start.getName() + " to " + end.getName());
+                logger.debug("|-------------------------------------------------------------------------------------");
+            }
         }
 
         return distances; // Retorna o mapa de distâncias calculadas
