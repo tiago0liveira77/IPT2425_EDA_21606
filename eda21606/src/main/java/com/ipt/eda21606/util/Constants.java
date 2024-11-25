@@ -11,5 +11,5 @@ package com.ipt.eda21606.util;
 public class Constants {
     public static final double EARTH_RADIUS_KM = 6371.0;
     public static final String INPUT_FILE_PATH = "files/worldcities.csv";
-    public static final double VEHICLE_AUTONOMY_KM = 500.0; // Define the vehicle's autonomy range
+    public static final double VEHICLE_AUTONOMY_KM = 200.0; // Define the vehicle's autonomy range
 }

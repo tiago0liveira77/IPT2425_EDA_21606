@@ -32,11 +32,12 @@ public class Main {
         
          // Escolher duas cidades (exemplo)
         System.out.println("--> 5 Test get closest");
-        CityBean city1 = cities.get(0);  
+        CityBean city1 = cities.get(1);  
         CityBean city2 = cities.get(8); 
+        CityBean city3 = cities.get(4); 
 
         // Criar o algoritmo de Dijkstra e calcular o caminho mais curto
         DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph);
-        dijkstra.findShortestPath(city1, city2);
+        dijkstra.findShortestPath(city1, city3);
     }
 }
