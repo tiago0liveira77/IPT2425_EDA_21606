@@ -17,6 +17,9 @@ import org.apache.logging.log4j.Logger;
 public class FileInOutUtils {
 
     private static final Logger logger = LogManager.getLogger(FileInOutUtils.class);
+    
+    public static File fileInputRaw = new File(INPUT_RAW_FILE_PATH);
+    public static File fileInputGraph = new File(INPUT_GRAPH_FILE_PATH);
 
     public static List<CityBean> readRawFile(String path) {
         if (logger.isDebugEnabled()) {
