@@ -9,36 +9,45 @@ import com.ipt.eda21606.model.GraphBean;
 import static com.ipt.eda21606.util.Constants.VEHICLE_AUTONOMY_KM;
 import com.ipt.eda21606.util.DistanceUtils;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class RouteService {
-    
+
+    private static final Logger logger = LogManager.getLogger(RouteService.class);
+
     public static GraphBean buildGraph(List<CityBean> cities) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("BUILDING GRAPH");
+        }
         GraphBean graph = new GraphBean();
 
-        // Add all cities as vertices
-        for (CityBean city : cities) {
-            graph.addCity(city);
-        }
+        // Filtrar cidades do país Portugal
+        List<CityBean> portugueseCities = cities.parallelStream()
+                .filter(city -> "Portugal".equalsIgnoreCase(city.getPais()))
+                .toList();
 
-        // Add edges between cities within the autonomy range
-        for (int i = 0; i < cities.size(); i++) {
-            for (int j = i + 1; j < cities.size(); j++) {
-                CityBean city1 = cities.get(i);
-                CityBean city2 = cities.get(j);
+        // Adicionar todas as cidades filtradas como vértices
+        portugueseCities.parallelStream().forEach(graph::addCity);
 
-                double distance = DistanceUtils.calculateDistance(
-                        city1.getLatitude(), city1.getLongitude(),
-                        city2.getLatitude(), city2.getLongitude()
-                );
+        // Adicionar arestas entre cidades dentro do intervalo de autonomia
+        portugueseCities.parallelStream().forEach(city1
+                -> portugueseCities.parallelStream()
+                        .filter(city2 -> !city1.equals(city2)) // Evitar comparar a cidade consigo mesma
+                        .forEach(city2 -> {
+                            double distance = DistanceUtils.calculateDistance(
+                                    city1.getLatitude(), city1.getLongitude(),
+                                    city2.getLatitude(), city2.getLongitude()
+                            );
 
-                if (distance <= VEHICLE_AUTONOMY_KM) {
-                    graph.addEdge(city1, city2);
-                    graph.addEdge(city2, city1); // Assuming it's undirected
-                }
-            }
-        }
+                            // if (distance <= VEHICLE_AUTONOMY_KM) {
+                            graph.addEdge(city1, city2);
+                            graph.addEdge(city2, city1); // Assumindo grafo não-direcionado
+                            // }
+                        })
+        );
 
         return graph;
     }
-}
 
+}

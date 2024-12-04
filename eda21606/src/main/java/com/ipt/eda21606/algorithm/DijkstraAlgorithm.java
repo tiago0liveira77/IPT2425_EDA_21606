@@ -88,8 +88,10 @@ public class DijkstraAlgorithm {
 
                 // Calcula a nova distância acumulada
                 double distance = distances.get(currentCityBean) + edgeDistance;
-
+                System.out.println("distance: " + distance);
+                    
                 // Atualiza a distância mínima se o novo caminho for mais curto
+                if (distances.get(neighbor) != null)
                 if (distance < distances.get(neighbor)) {
                     if (logger.isDebugEnabled()) {
                         logger.debug("|----> Updating distance for " + neighbor.getName() + " to " + distance);

@@ -3,10 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.ipt.eda21606.model;
+import java.io.Serializable;
 
 import java.util.*;
 
-public class GraphBean {
+public class GraphBean implements Serializable{
 
     private Map<CityBean, List<CityBean>> adjacencies = new HashMap<>();
 
