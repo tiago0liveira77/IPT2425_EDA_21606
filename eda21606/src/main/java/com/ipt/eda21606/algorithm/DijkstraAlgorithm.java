@@ -23,6 +23,12 @@ public class DijkstraAlgorithm {
     }
 
     public Map<CityBean, Double> findShortestPath(CityBean start, CityBean end) {
+        if (start == null || end == null) {
+            if (logger.isErrorEnabled()){
+                logger.error("UMA DAS CIDADES NÃO EXISTE");     
+            }
+            return null;
+        }
         if (logger.isDebugEnabled()) {
             logger.debug("|-> |FindShortestPath| From: " + start.getName() + " To: " + end.getName());
         }
@@ -89,15 +95,16 @@ public class DijkstraAlgorithm {
                 // Calcula a nova distância acumulada
                 double distance = distances.get(currentCityBean) + edgeDistance;
                 System.out.println("distance: " + distance);
-                    
+
                 // Atualiza a distância mínima se o novo caminho for mais curto
-                if (distances.get(neighbor) != null)
-                if (distance < distances.get(neighbor)) {
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("|----> Updating distance for " + neighbor.getName() + " to " + distance);
+                if (distances.get(neighbor) != null) {
+                    if (distance < distances.get(neighbor)) {
+                        if (logger.isDebugEnabled()) {
+                            logger.debug("|----> Updating distance for " + neighbor.getName() + " to " + distance);
+                        }
+                        distances.put(neighbor, distance);
+                        predecessors.put(neighbor, currentCityBean);
                     }
-                    distances.put(neighbor, distance);
-                    predecessors.put(neighbor, currentCityBean);
                 }
             }
 

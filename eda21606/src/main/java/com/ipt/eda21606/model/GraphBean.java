@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.*;
 
 public class GraphBean implements Serializable{
-
+    private static final long serialVersionUID = 1L;
     private Map<CityBean, List<CityBean>> adjacencies = new HashMap<>();
 
     public void addCity(CityBean city) {
@@ -42,5 +42,11 @@ public class GraphBean implements Serializable{
 
     public Set<CityBean> getCities() {
         return adjacencies.keySet();
+    }
+    
+    public Optional<CityBean> findCityByName(String name) {
+        return adjacencies.keySet().stream()
+                     .filter(city -> name.equalsIgnoreCase(city.getName()))
+                     .findFirst();
     }
 }

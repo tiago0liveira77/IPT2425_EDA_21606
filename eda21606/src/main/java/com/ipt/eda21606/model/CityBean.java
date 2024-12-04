@@ -18,6 +18,7 @@ import lombok.EqualsAndHashCode;
 @Builder
 @EqualsAndHashCode
 public class CityBean implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String name;           // city
     private String nameAscii;      // city_ascii
     private double latitude;       // lat
