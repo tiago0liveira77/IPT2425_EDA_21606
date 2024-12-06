@@ -11,9 +11,11 @@ import static com.ipt.eda21606.util.Constants.*;
 import com.ipt.eda21606.util.FileInOutUtils;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,8 +47,13 @@ public class Main {
             }
         } else if (FileInOutUtils.fileInputRaw.exists()) { //Se nao existe, le o de entrada e cria o grafo
             List<CityBean> cities = FileInOutUtils.readRawFile(INPUT_RAW_FILE_PATH);
-            GraphBean graph = RouteService.buildGraph(cities);
-            FileInOutUtils.saveGraphFile(graph, INPUT_GRAPH_FILE_PATH);
+            Set<String> selectedCountries = new HashSet<>();
+            selectedCountries.add("Spain");
+            graph = RouteService.buildGraphCountries(cities, selectedCountries);
+            graph.displayGraph();
+            dijkstraAlgorithm = new DijkstraAlgorithm(graph);
+            makePathFromTo();
+            //FileInOutUtils.saveGraphFile(graph, INPUT_GRAPH_FILE_PATH);
             if (logger.isDebugEnabled()) {
                 logger.debug("App Iniciada pela primeira vez. Criar e guardar grafo.");
             }
@@ -56,8 +63,7 @@ public class Main {
             }
             return;
         }
-        dijkstraAlgorithm = new DijkstraAlgorithm(graph);
-        makePathFromTo();
+
     }
 
     public static void makePathFromTo() {

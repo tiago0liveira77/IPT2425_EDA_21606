@@ -6,6 +6,7 @@ package com.ipt.eda21606.main;
 
 import com.ipt.eda21606.algorithm.DijkstraAlgorithm;
 import com.ipt.eda21606.gui.AboutGUI;
+import com.ipt.eda21606.gui.Utils;
 import com.ipt.eda21606.model.CityBean;
 import com.ipt.eda21606.model.GraphBean;
 import com.ipt.eda21606.service.RouteService;
@@ -16,14 +17,13 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import com.ipt.eda21606.util.FileInOutUtils;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.swing.DefaultListModel;
+import javax.swing.SwingUtilities;
 
-/**
- *
- * @author pcjoa
- */
 public class MainGUI extends javax.swing.JFrame {
 
     public static List<CityBean> citiesGlobal;
@@ -38,6 +38,7 @@ public class MainGUI extends javax.swing.JFrame {
     private CityBean destinyCity;
     private int GUIListSelectedIndex = 0;
     private boolean isCitiesEmpty = true;
+    private Set<String> selectedCountries = new HashSet<>();
 
     //ListModel para JList cidades
     public static DefaultListModel<String> listaGUICidades = new DefaultListModel<>();
@@ -109,6 +110,9 @@ public class MainGUI extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         routeTxtBox = new javax.swing.JTextArea();
         buildGraphBtn = new javax.swing.JButton();
+        portugalCheckBox = new javax.swing.JCheckBox();
+        espanhaCheckBox = new javax.swing.JCheckBox();
+        francaCheckBox = new javax.swing.JCheckBox();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuFileItem = new javax.swing.JMenu();
         menuOpen = new javax.swing.JMenuItem();
@@ -374,7 +378,7 @@ public class MainGUI extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(53, 53, 53)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -387,7 +391,7 @@ public class MainGUI extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(destinyCityName))
                             .addComponent(doRouteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 301, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(autonomyLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -431,6 +435,28 @@ public class MainGUI extends javax.swing.JFrame {
         buildGraphBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buildGraphBtnActionPerformed(evt);
+            }
+        });
+
+        portugalCheckBox.setSelected(true);
+        portugalCheckBox.setText("Portugal");
+        portugalCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                portugalCheckBoxActionPerformed(evt);
+            }
+        });
+
+        espanhaCheckBox.setText("Espanha");
+        espanhaCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                espanhaCheckBoxActionPerformed(evt);
+            }
+        });
+
+        francaCheckBox.setText("França");
+        francaCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                francaCheckBoxActionPerformed(evt);
             }
         });
 
@@ -500,17 +526,18 @@ public class MainGUI extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(GUIElectorPanelBottomNav, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(buildGraphBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(113, 113, 113)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(GUIElectorPanelBottomNav, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1)
+                        .addComponent(portugalCheckBox)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(espanhaCheckBox)
+                            .addGap(91, 91, 91)
+                            .addComponent(buildGraphBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(francaCheckBox))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -532,8 +559,14 @@ public class MainGUI extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 457, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(GUIElectorPanelBottomNav, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buildGraphBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(portugalCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(espanhaCheckBox)
+                            .addComponent(buildGraphBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(francaCheckBox))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(CityBtnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -549,18 +582,23 @@ public class MainGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void menuOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuOpenActionPerformed
-        try {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
-            int result = fileChooser.showOpenDialog(fileChooser);
-            if (result == JFileChooser.APPROVE_OPTION) {
-                String selectedFile = fileChooser.getSelectedFile().getAbsolutePath();
-                citiesGlobal = FileInOutUtils.readRawFile(selectedFile);
-                updateGUILists();
+        Utils.executeLongTask(this, "A carregar ficheiro...", () -> {
+            try {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+                int result = fileChooser.showOpenDialog(fileChooser);
+
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    String selectedFile = fileChooser.getSelectedFile().getAbsolutePath();
+                    citiesGlobal = FileInOutUtils.readRawFile(selectedFile);
+                    updateGUILists(); // Atualizar a GUI após o carregamento
+                }
+            } catch (Exception ex) {
+                SwingUtilities.invokeLater(() -> {
+                    JOptionPane.showMessageDialog(this, "Erro ao abrir ficheiro", "Erro", JOptionPane.ERROR_MESSAGE);
+                });
             }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(Exception, "Erro ao abrir ficheiro", "Erro", JOptionPane.OK_OPTION);
-        }
+        });
     }//GEN-LAST:event_menuOpenActionPerformed
 
     private void menuAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAboutActionPerformed
@@ -677,26 +715,39 @@ public class MainGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_citiesJListValueChanged
 
     private void menuOpenGraphActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuOpenGraphActionPerformed
-        try {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
-            int result = fileChooser.showOpenDialog(fileChooser);
-            if (result == JFileChooser.APPROVE_OPTION) {
-                String selectedFile = fileChooser.getSelectedFile().getAbsolutePath();
-                graphGlobal = FileInOutUtils.readGraphFile(selectedFile);
-                citiesGlobal = graphGlobal.getCities().stream().toList();
-                updateGUILists();
+        Utils.executeLongTask(this, "A carregar ficheiro de grafo...", () -> {
+            try {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+                int result = fileChooser.showOpenDialog(fileChooser);
+
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    String selectedFile = fileChooser.getSelectedFile().getAbsolutePath();
+                    graphGlobal = FileInOutUtils.readGraphFile(selectedFile); // Carrega o grafo do ficheiro
+                    citiesGlobal = graphGlobal.getCities().stream().toList(); // Obtém as cidades do grafo
+                    updateGUILists(); // Atualiza a GUI com as novas cidades
+                }
+            } catch (Exception ex) {
+                SwingUtilities.invokeLater(() -> {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Erro ao abrir ficheiro com grafo",
+                            "Erro",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                });
             }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(Exception, "Erro ao abrir ficheiro com grafo", "Erro", JOptionPane.OK_OPTION);
-        }
+        });
     }//GEN-LAST:event_menuOpenGraphActionPerformed
 
     private void doRouteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doRouteBtnActionPerformed
-        dijkstraAlgorithmGlobal = new DijkstraAlgorithm(graphGlobal);
-        distancesGlobal = dijkstraAlgorithmGlobal.findShortestPath(sourceCity, destinyCity, AUTONOMY_KM);
-        routeTxtBox.setText(route);
-        distancesTxtBox.setText(DistanceUtils.getAllDistancesText(distancesGlobal));
+        Utils.executeLongTask(this, "A fazer rota...", () -> {
+            // Código para abrir ficheiro
+            dijkstraAlgorithmGlobal = new DijkstraAlgorithm(graphGlobal);
+            distancesGlobal = dijkstraAlgorithmGlobal.findShortestPath(sourceCity, destinyCity, AUTONOMY_KM);
+            routeTxtBox.setText(route);
+            distancesTxtBox.setText(DistanceUtils.getAllDistancesText(distancesGlobal));
+        });
     }//GEN-LAST:event_doRouteBtnActionPerformed
 
     private void setSourceCityBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setSourceCityBtnActionPerformed
@@ -737,25 +788,66 @@ public class MainGUI extends javax.swing.JFrame {
 
     private void menuSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSaveActionPerformed
         if (graphGlobal == null) {
-            JOptionPane.showMessageDialog(Exception, "Grafo ainda não foi construido", "Erro", JOptionPane.OK_OPTION);
+            JOptionPane.showMessageDialog(this, "Grafo ainda não foi construído", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        try {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
-            int result = fileChooser.showOpenDialog(fileChooser);
-            if (result == JFileChooser.APPROVE_OPTION) {
-                String selectedFile = fileChooser.getSelectedFile().getAbsolutePath();
-                FileInOutUtils.saveGraphFile(graphGlobal, selectedFile);
+
+        Utils.executeLongTask(this, "A guardar ficheiro de grafo...", () -> {
+            try {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+                int result = fileChooser.showSaveDialog(fileChooser);
+
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    String selectedFile = fileChooser.getSelectedFile().getAbsolutePath();
+                    FileInOutUtils.saveGraphFile(graphGlobal, selectedFile); // Salva o grafo no ficheiro selecionado
+                }
+            } catch (Exception ex) {
+                SwingUtilities.invokeLater(() -> {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Erro ao guardar ficheiro",
+                            "Erro",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                });
             }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(Exception, "Erro ao guardar ficheiro", "Erro", JOptionPane.OK_OPTION);
-        }
+        });
     }//GEN-LAST:event_menuSaveActionPerformed
 
     private void buildGraphBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buildGraphBtnActionPerformed
-        graphGlobal = RouteService.buildGraph(citiesGlobal);
+        Utils.executeLongTask(this, "A consturir grafo...", () -> {
+            if (selectedCountries.isEmpty()) {
+                selectedCountries.add("Portugal");
+            }
+            System.out.println(selectedCountries.size());
+            graphGlobal = RouteService.buildGraphCountries(citiesGlobal, selectedCountries);
+        });
     }//GEN-LAST:event_buildGraphBtnActionPerformed
+
+    private void portugalCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_portugalCheckBoxActionPerformed
+        if (portugalCheckBox.isSelected()) {
+            selectedCountries.add("Portugal");
+        } else {
+            selectedCountries.remove("Portugal");
+        }
+    }//GEN-LAST:event_portugalCheckBoxActionPerformed
+
+    private void espanhaCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_espanhaCheckBoxActionPerformed
+        if (espanhaCheckBox.isSelected()) {
+            selectedCountries.add("Spain");
+        } else {
+            selectedCountries.remove("Spain");
+        }
+    }//GEN-LAST:event_espanhaCheckBoxActionPerformed
+
+    private void francaCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_francaCheckBoxActionPerformed
+        if (francaCheckBox.isSelected()) {
+            selectedCountries.add("France");
+        } else {
+            selectedCountries.remove("France");
+        }
+    }//GEN-LAST:event_francaCheckBoxActionPerformed
 
     /**
      * @param args the command line arguments
@@ -792,6 +884,7 @@ public class MainGUI extends javax.swing.JFrame {
         });
     }
 
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnLast;
     private javax.swing.JButton BtnNext;
@@ -811,6 +904,8 @@ public class MainGUI extends javax.swing.JFrame {
     private javax.swing.JTextArea distancesTxtBox;
     private javax.swing.JButton doRouteBtn;
     private javax.swing.JButton doRouteBtn1;
+    private javax.swing.JCheckBox espanhaCheckBox;
+    private javax.swing.JCheckBox francaCheckBox;
     private javax.swing.JTextField inputAutonomyTxtBox;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
@@ -831,6 +926,7 @@ public class MainGUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuOpen;
     private javax.swing.JMenuItem menuOpenGraph;
     private javax.swing.JMenuItem menuSave;
+    private javax.swing.JCheckBox portugalCheckBox;
     private javax.swing.JTextArea routeTxtBox;
     private javax.swing.JButton setDestinyCityBtn;
     private javax.swing.JButton setSourceCityBtn;
