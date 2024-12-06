@@ -6,7 +6,7 @@ package com.ipt.eda21606.algorithm;
 
 import com.ipt.eda21606.model.CityBean;
 import com.ipt.eda21606.model.GraphBean;
-import static com.ipt.eda21606.util.Constants.VEHICLE_AUTONOMY_KM;
+import static com.ipt.eda21606.util.Constants.VEHICLE_AUTONOMY_KM_OLD;
 import com.ipt.eda21606.util.DistanceUtils;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
@@ -92,7 +92,7 @@ public class DijkstraAlgorithmTest {
 
         DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph2);
 
-        Map<CityBean, Double> distances = dijkstra.findShortestPath(city1, city2);
+        Map<CityBean, Double> distances = dijkstra.findShortestPath(city1, city2, VEHICLE_AUTONOMY_KM_OLD);
 
         assertEquals(0.0, distances.get(city1), "Start city should have distance 0.");
         assertNotNull(distances.get(city2), "End city should have a distance.");
@@ -106,7 +106,7 @@ public class DijkstraAlgorithmTest {
         graph.displayGraph();
 
         // Calcula o menor caminho entre Lisboa e Porto
-        Map<CityBean, Double> distances = dijkstra.findShortestPath(lisbon, porto);
+        Map<CityBean, Double> distances = dijkstra.findShortestPath(lisbon, porto, VEHICLE_AUTONOMY_KM_OLD);
 
         // Distância esperada
         double expectedDistance = DistanceUtils.calculateDistance(
@@ -115,7 +115,7 @@ public class DijkstraAlgorithmTest {
         );
 
         // Verifica se a distância calculada está correta
-        if(expectedDistance <= VEHICLE_AUTONOMY_KM){
+        if(expectedDistance <= VEHICLE_AUTONOMY_KM_OLD){
             assertEquals(expectedDistance, distances.get(porto), "Distance should match the expected value.");
         }
         System.out.println("Distance is greater than autonomy");
@@ -132,7 +132,7 @@ public class DijkstraAlgorithmTest {
 
         DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(newGraph);
 
-        Map<CityBean, Double> distances = dijkstra.findShortestPath(lisbon, faro);
+        Map<CityBean, Double> distances = dijkstra.findShortestPath(lisbon, faro, VEHICLE_AUTONOMY_KM_OLD);
 
         // Verifica se a cidade está no mapa e se a distância é infinita
         assertTrue(distances.containsKey(faro), "The city should exist in the distances map.");
@@ -166,7 +166,7 @@ public class DijkstraAlgorithmTest {
         DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph);
 
         // Calcula o menor caminho entre CityA e CityD
-        Map<CityBean, Double> distances = dijkstra.findShortestPath(cityA, cityD);
+        Map<CityBean, Double> distances = dijkstra.findShortestPath(cityA, cityD, VEHICLE_AUTONOMY_KM_OLD);
 
         // Verifica o menor caminho esperado
         double distanceAB = DistanceUtils.calculateDistance(cityA.getLatitude(), cityA.getLongitude(),

@@ -6,7 +6,7 @@ package com.ipt.eda21606.algorithm;
 
 import com.ipt.eda21606.model.CityBean;
 import com.ipt.eda21606.model.GraphBean;
-import static com.ipt.eda21606.util.Constants.VEHICLE_AUTONOMY_KM;
+import static com.ipt.eda21606.util.Constants.VEHICLE_AUTONOMY_KM_OLD;
 import com.ipt.eda21606.util.DistanceUtils;
 import java.util.*;
 import org.apache.logging.log4j.LogManager;
@@ -22,7 +22,7 @@ public class DijkstraAlgorithm {
         this.graph = graph;
     }
 
-    public Map<CityBean, Double> findShortestPath(CityBean start, CityBean end) {
+    public Map<CityBean, Double> findShortestPath(CityBean start, CityBean end, double autonomy) {
         if (start == null || end == null) {
             if (logger.isErrorEnabled()){
                 logger.error("UMA DAS CIDADES NÃO EXISTE");     
@@ -32,7 +32,7 @@ public class DijkstraAlgorithm {
         if (logger.isDebugEnabled()) {
             logger.debug("|-> |FindShortestPath| From: " + start.getName() + " To: " + end.getName());
         }
-        double autonomy = VEHICLE_AUTONOMY_KM;
+        //double autonomy = VEHICLE_AUTONOMY_KM_OLD;
         Map<CityBean, Double> distances = new HashMap<>(); // Mapa de distâncias mínimas
         Map<CityBean, CityBean> predecessors = new HashMap<>(); // Mapa de predecessores
         Set<CityBean> unvisitedCities = new HashSet<>(); // Conjunto de cidades não visitadas

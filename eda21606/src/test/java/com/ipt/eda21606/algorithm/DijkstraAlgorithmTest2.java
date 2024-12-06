@@ -6,6 +6,7 @@ package com.ipt.eda21606.algorithm;
 
 import com.ipt.eda21606.model.CityBean;
 import com.ipt.eda21606.model.GraphBean;
+import static com.ipt.eda21606.util.Constants.VEHICLE_AUTONOMY_KM_OLD;
 import com.ipt.eda21606.util.DistanceUtils;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
@@ -54,7 +55,7 @@ public class DijkstraAlgorithmTest2 {
         DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph);
 
         // Calculando o menor caminho de CityA a CityD
-        Map<CityBean, Double> distances = dijkstra.findShortestPath(cityA, cityD);
+        Map<CityBean, Double> distances = dijkstra.findShortestPath(cityA, cityD, VEHICLE_AUTONOMY_KM_OLD);
 
         // A distância esperada: CityA -> CityB -> CityD
         double distanceAB = DistanceUtils.calculateDistance(cityA.getLatitude(), cityA.getLongitude(),

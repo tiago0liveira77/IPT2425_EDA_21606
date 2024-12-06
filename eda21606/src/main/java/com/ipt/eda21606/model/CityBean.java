@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,7 +25,7 @@ import org.apache.logging.log4j.Logger;
 public class CityBean implements Serializable {
 
     private static final Logger logger = LogManager.getLogger(CityBean.class);
-    
+
     private static final long serialVersionUID = 1L;
     private String name;           // city
     private String nameAscii;      // city_ascii
@@ -64,4 +65,18 @@ public class CityBean implements Serializable {
         }
         return -1; // Retorna -1 se a cidade não for encontrada
     }
+
+    public static int findCitiesByName(String cityName, List<CityBean> cities) {
+        if (cityName == null || cities == null) {
+            throw new IllegalArgumentException("Nome da cidade ou lista de cidades não pode ser nulo.");
+        }
+        List<CityBean> matchingCities = new ArrayList<>();
+         for (int i = 0; i < cities.size(); i++) {
+            if (cities.get(i).getName().toLowerCase().contains(cityName.toLowerCase())) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
 }

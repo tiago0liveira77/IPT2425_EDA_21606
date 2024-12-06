@@ -6,7 +6,6 @@ package com.ipt.eda21606.service;
 
 import com.ipt.eda21606.model.CityBean;
 import com.ipt.eda21606.model.GraphBean;
-import static com.ipt.eda21606.util.Constants.VEHICLE_AUTONOMY_KM;
 import com.ipt.eda21606.util.DistanceUtils;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;

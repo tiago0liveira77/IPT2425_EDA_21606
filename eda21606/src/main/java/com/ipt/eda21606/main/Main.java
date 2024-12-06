@@ -78,7 +78,7 @@ public class Main {
 
         CityBean city1 = graph.findCityByName(city1Name).orElse(null);
         CityBean city2 = graph.findCityByName(city2Name).orElse(null);
-        distances = dijkstraAlgorithm.findShortestPath(city1, city2);
+        distances = dijkstraAlgorithm.findShortestPath(city1, city2, 200);
     }
 
 }
