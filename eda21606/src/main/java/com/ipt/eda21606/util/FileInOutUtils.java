@@ -37,7 +37,6 @@ public class FileInOutUtils {
                     continue;
                 }
 
-                System.out.println(line);
 
                 // Constrói o objeto CityBean com os valores relevantes
                 cities.add(CityBean.builder()
@@ -67,7 +66,6 @@ public class FileInOutUtils {
         }
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
             GraphBean graph = (GraphBean) ois.readObject();
-            System.out.println("GraphBean lido com sucesso de: " + filePath);
             return graph;
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -81,7 +79,6 @@ public class FileInOutUtils {
         }
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path))) {
             oos.writeObject(graph);
-            System.out.println("GraphBean salvo com sucesso em: " + path);
         } catch (IOException e) {
             e.printStackTrace();
         }

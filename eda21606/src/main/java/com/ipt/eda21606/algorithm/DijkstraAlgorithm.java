@@ -4,6 +4,7 @@
  */
 package com.ipt.eda21606.algorithm;
 
+import com.ipt.eda21606.main.MainGUI;
 import com.ipt.eda21606.model.CityBean;
 import com.ipt.eda21606.model.GraphBean;
 import static com.ipt.eda21606.util.Constants.VEHICLE_AUTONOMY_KM_OLD;
@@ -73,6 +74,12 @@ public class DijkstraAlgorithm {
 
             // Atualiza as distâncias para os vizinhos
             for (CityBean neighbor : graph.getAdjacencies(currentCityBean)) {
+                if (neighbor == null){
+                    if (logger.isDebugEnabled()) {
+                    logger.debug("|---> neighbor null");
+                }
+                    continue;
+                }
                 if (logger.isDebugEnabled()) {
                     logger.debug("|---> Checking neighbor: " + neighbor.getName());
                 }
@@ -94,7 +101,6 @@ public class DijkstraAlgorithm {
 
                 // Calcula a nova distância acumulada
                 double distance = distances.get(currentCityBean) + edgeDistance;
-                System.out.println("distance: " + distance);
 
                 // Atualiza a distância mínima se o novo caminho for mais curto
                 if (distances.get(neighbor) != null) {
@@ -132,6 +138,8 @@ public class DijkstraAlgorithm {
                 if (logger.isDebugEnabled()) {
                     logger.debug("|----> Edge distances:");
                 }
+                StringBuilder outputRoute = new StringBuilder();
+                double totalDistance = 0.0;
                 for (int i = 0; i < path.size() - 1; i++) {
                     CityBean from = path.get(i);
                     CityBean to = path.get(i + 1);
@@ -142,7 +150,11 @@ public class DijkstraAlgorithm {
                     if (logger.isDebugEnabled()) {
                         logger.debug("|-------> From " + from.getName() + " to " + to.getName() + ": " + edgeDistance + " km");
                     }
+                    outputRoute.append(String.format("%s -> %s = %.2f \n", from.getName(), to.getName(), edgeDistance));
+                    totalDistance += edgeDistance;
                 }
+                outputRoute.append("Distancia total: " + totalDistance);
+                MainGUI.route = outputRoute.toString();
                 if (logger.isDebugEnabled()) {
                     logger.debug("|-------------------------------------------------------------------------------------");
                 }

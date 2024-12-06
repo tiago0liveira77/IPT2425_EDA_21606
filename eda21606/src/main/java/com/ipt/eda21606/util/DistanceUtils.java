@@ -62,4 +62,18 @@ public class DistanceUtils {
         }
     }
 
+    public static String getAllDistancesText(Map<CityBean, Double> distances) {
+        StringBuilder sb = new StringBuilder();
+        distances.forEach((city, distance) -> {
+            if (distance == Double.POSITIVE_INFINITY) {
+                sb.append(String.format("%s: Distancia excedida \n", city.getName()));
+            } else {
+                sb.append(String.format("%s: %.2f \n", city.getName(), distance));
+            }
+        });
+
+        return sb.toString();
+
+    }
+
 }

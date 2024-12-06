@@ -6,14 +6,12 @@ package com.ipt.eda21606.main;
 
 import com.ipt.eda21606.algorithm.DijkstraAlgorithm;
 import com.ipt.eda21606.gui.AboutGUI;
-import static com.ipt.eda21606.main.Main.graph;
 import com.ipt.eda21606.model.CityBean;
 import com.ipt.eda21606.model.GraphBean;
+import com.ipt.eda21606.service.RouteService;
 import static com.ipt.eda21606.util.Constants.INPUT_GRAPH_FILE_PATH;
+import com.ipt.eda21606.util.DistanceUtils;
 import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -33,6 +31,7 @@ public class MainGUI extends javax.swing.JFrame {
     public static Map<CityBean, Double> distancesGlobal;
     public static GraphBean graphGlobal;
     public static int AUTONOMY_KM = 200;
+    public static String route = "";
 
     private CityBean selectedCity;
     private CityBean sourceCity;
@@ -60,11 +59,11 @@ public class MainGUI extends javax.swing.JFrame {
     public MainGUI() {
         initComponents();
         citiesJList.setModel(listaGUICidades);
-         if (FileInOutUtils.fileInputGraph.exists()) {
+        if (FileInOutUtils.fileInputGraph.exists()) {
             graphGlobal = FileInOutUtils.readGraphFile(INPUT_GRAPH_FILE_PATH);
             citiesGlobal = graphGlobal.getCities().stream().toList();
             updateGUILists();
-         } 
+        }
         //updateGUILists();
     }
 
@@ -105,6 +104,11 @@ public class MainGUI extends javax.swing.JFrame {
         inputAutonomyTxtBox = new javax.swing.JTextField();
         doRouteBtn1 = new javax.swing.JButton();
         autonomyLabel = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        distancesTxtBox = new javax.swing.JTextArea();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        routeTxtBox = new javax.swing.JTextArea();
+        buildGraphBtn = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuFileItem = new javax.swing.JMenu();
         menuOpen = new javax.swing.JMenuItem();
@@ -235,7 +239,7 @@ public class MainGUI extends javax.swing.JFrame {
             }
         });
 
-        CityTxtBoxName.setText("Teste");
+        CityTxtBoxName.setText("Cidade");
         CityTxtBoxName.setBorder(javax.swing.BorderFactory.createTitledBorder("Nome"));
         CityTxtBoxName.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -260,7 +264,7 @@ public class MainGUI extends javax.swing.JFrame {
             }
         });
 
-        CityTxtBoxCountry.setText("Teste");
+        CityTxtBoxCountry.setText("País");
         CityTxtBoxCountry.setBorder(javax.swing.BorderFactory.createTitledBorder("País"));
         CityTxtBoxCountry.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -285,7 +289,7 @@ public class MainGUI extends javax.swing.JFrame {
             }
         });
 
-        setSourceCityBtn.setText("Origem");
+        setSourceCityBtn.setText("Definir Origem");
         setSourceCityBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setSourceCityBtnActionPerformed(evt);
@@ -299,11 +303,11 @@ public class MainGUI extends javax.swing.JFrame {
             }
         });
 
-        destinyCityName.setText("jLabel1");
+        destinyCityName.setText("Destino");
 
-        sourceCityName.setText("jLabel2");
+        sourceCityName.setText("Origem");
 
-        doRouteBtn.setText("Rota");
+        doRouteBtn.setText("Calcular Rota");
         doRouteBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 doRouteBtnActionPerformed(evt);
@@ -344,39 +348,52 @@ public class MainGUI extends javax.swing.JFrame {
 
         autonomyLabel.setText("Autonomia = 200");
 
+        distancesTxtBox.setEditable(false);
+        distancesTxtBox.setColumns(20);
+        distancesTxtBox.setRows(5);
+        distancesTxtBox.setText("Distâncias");
+        distancesTxtBox.setBorder(javax.swing.BorderFactory.createTitledBorder("Distâncias"));
+        jScrollPane2.setViewportView(distancesTxtBox);
+
+        routeTxtBox.setEditable(false);
+        routeTxtBox.setColumns(20);
+        routeTxtBox.setRows(5);
+        routeTxtBox.setText("Rota");
+        routeTxtBox.setBorder(javax.swing.BorderFactory.createTitledBorder("Rota"));
+        jScrollPane3.setViewportView(routeTxtBox);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(6, 6, 6)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(CityTxtBoxCountry, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(CityTxtBoxName)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(CityTxtBoxName, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
-                        .addGap(78, 78, 78))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(CityTxtBoxCountry)
-                        .addContainerGap())))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addComponent(sourceCityName)
-                        .addGap(66, 66, 66)
-                        .addComponent(destinyCityName))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(setSourceCityBtn)
-                        .addGap(34, 34, 34)
-                        .addComponent(setDestinyCityBtn)
-                        .addGap(32, 32, 32)
-                        .addComponent(doRouteBtn)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(doRouteBtn1)
-                    .addComponent(autonomyLabel)
-                    .addComponent(inputAutonomyTxtBox, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(27, 27, 27))
+                        .addGap(53, 53, 53)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(setSourceCityBtn)
+                                .addGap(18, 18, 18)
+                                .addComponent(sourceCityName))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(setDestinyCityBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(destinyCityName))
+                            .addComponent(doRouteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(autonomyLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(inputAutonomyTxtBox, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
+                                .addComponent(doRouteBtn1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                .addGap(78, 78, 78))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -385,26 +402,37 @@ public class MainGUI extends javax.swing.JFrame {
                 .addComponent(CityTxtBoxName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(CityTxtBoxCountry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 262, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(destinyCityName, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(sourceCityName, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(setSourceCityBtn)
-                            .addComponent(setDestinyCityBtn)
-                            .addComponent(doRouteBtn))
-                        .addGap(45, 45, 45))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(37, 37, 37)
                         .addComponent(inputAutonomyTxtBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(autonomyLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(doRouteBtn1)
-                        .addGap(14, 14, 14))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(doRouteBtn1))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(setSourceCityBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(sourceCityName, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(setDestinyCityBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(destinyCityName)
+                            .addComponent(autonomyLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(doRouteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(123, 123, 123))
         );
+
+        buildGraphBtn.setText("Construir grafo");
+        buildGraphBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buildGraphBtnActionPerformed(evt);
+            }
+        });
 
         menuFileItem.setText("File");
 
@@ -431,6 +459,11 @@ public class MainGUI extends javax.swing.JFrame {
         menuSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         menuSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/config_24.png"))); // NOI18N
         menuSave.setText("Guardar");
+        menuSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuSaveActionPerformed(evt);
+            }
+        });
         menuFileItem.add(menuSave);
         menuFileItem.add(jSeparator1);
 
@@ -467,40 +500,49 @@ public class MainGUI extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(GUIElectorPanelBottomNav, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(GUIElectorPanelBottomNav, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(buildGraphBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(113, 113, 113)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(CityBtnSearch)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(CityTxtBoxSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(CityTxtBoxSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(CityCloseBtn)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                        .addGap(87, 87, 87))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 457, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(GUIElectorPanelBottomNav, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(GUIElectorPanelBottomNav, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(buildGraphBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(CityBtnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(CityTxtBoxSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
-                                .addComponent(CityCloseBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(CityTxtBoxSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(CityCloseBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(26, Short.MAX_VALUE))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -517,7 +559,7 @@ public class MainGUI extends javax.swing.JFrame {
                 updateGUILists();
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(Exception, "", "", JOptionPane.OK_OPTION);
+            JOptionPane.showMessageDialog(Exception, "Erro ao abrir ficheiro", "Erro", JOptionPane.OK_OPTION);
         }
     }//GEN-LAST:event_menuOpenActionPerformed
 
@@ -578,7 +620,7 @@ public class MainGUI extends javax.swing.JFrame {
             }
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(Exception, "", "", JOptionPane.OK_OPTION);
+            JOptionPane.showMessageDialog(Exception, "Cidade não encontrada", "Erro", JOptionPane.OK_OPTION);
         }
     }//GEN-LAST:event_CityBtnSearchActionPerformed
 
@@ -595,7 +637,6 @@ public class MainGUI extends javax.swing.JFrame {
 
     private void CityTxtBoxNameInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_CityTxtBoxNameInputMethodTextChanged
         // TODO add your handling code here:
-        System.out.println("mudou");
     }//GEN-LAST:event_CityTxtBoxNameInputMethodTextChanged
 
     private void CityTxtBoxNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CityTxtBoxNameActionPerformed
@@ -647,13 +688,15 @@ public class MainGUI extends javax.swing.JFrame {
                 updateGUILists();
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(Exception, "", "", JOptionPane.OK_OPTION);
+            JOptionPane.showMessageDialog(Exception, "Erro ao abrir ficheiro com grafo", "Erro", JOptionPane.OK_OPTION);
         }
     }//GEN-LAST:event_menuOpenGraphActionPerformed
 
     private void doRouteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doRouteBtnActionPerformed
         dijkstraAlgorithmGlobal = new DijkstraAlgorithm(graphGlobal);
         distancesGlobal = dijkstraAlgorithmGlobal.findShortestPath(sourceCity, destinyCity, AUTONOMY_KM);
+        routeTxtBox.setText(route);
+        distancesTxtBox.setText(DistanceUtils.getAllDistancesText(distancesGlobal));
     }//GEN-LAST:event_doRouteBtnActionPerformed
 
     private void setSourceCityBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setSourceCityBtnActionPerformed
@@ -691,6 +734,28 @@ public class MainGUI extends javax.swing.JFrame {
         }
         autonomyLabel.setText("Autonomia = " + AUTONOMY_KM);
     }//GEN-LAST:event_doRouteBtn1ActionPerformed
+
+    private void menuSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSaveActionPerformed
+        if (graphGlobal == null) {
+            JOptionPane.showMessageDialog(Exception, "Grafo ainda não foi construido", "Erro", JOptionPane.OK_OPTION);
+            return;
+        }
+        try {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+            int result = fileChooser.showOpenDialog(fileChooser);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                String selectedFile = fileChooser.getSelectedFile().getAbsolutePath();
+                FileInOutUtils.saveGraphFile(graphGlobal, selectedFile);
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(Exception, "Erro ao guardar ficheiro", "Erro", JOptionPane.OK_OPTION);
+        }
+    }//GEN-LAST:event_menuSaveActionPerformed
+
+    private void buildGraphBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buildGraphBtnActionPerformed
+        graphGlobal = RouteService.buildGraph(citiesGlobal);
+    }//GEN-LAST:event_buildGraphBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -740,8 +805,10 @@ public class MainGUI extends javax.swing.JFrame {
     private javax.swing.JPanel GUIElectorPanelBottomNav;
     private javax.swing.JLabel autonomyLabel;
     private javax.swing.JButton btnFirst;
+    private javax.swing.JButton buildGraphBtn;
     private javax.swing.JList<String> citiesJList;
     private javax.swing.JLabel destinyCityName;
+    private javax.swing.JTextArea distancesTxtBox;
     private javax.swing.JButton doRouteBtn;
     private javax.swing.JButton doRouteBtn1;
     private javax.swing.JTextField inputAutonomyTxtBox;
@@ -754,6 +821,8 @@ public class MainGUI extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JMenuItem menuAbout;
     private javax.swing.JMenu menuAboutItem;
@@ -762,6 +831,7 @@ public class MainGUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuOpen;
     private javax.swing.JMenuItem menuOpenGraph;
     private javax.swing.JMenuItem menuSave;
+    private javax.swing.JTextArea routeTxtBox;
     private javax.swing.JButton setDestinyCityBtn;
     private javax.swing.JButton setSourceCityBtn;
     private javax.swing.JLabel sourceCityName;
