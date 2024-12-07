@@ -6,7 +6,7 @@ package com.ipt.eda21606.main;
 
 import com.ipt.eda21606.algorithm.DijkstraAlgorithm;
 import com.ipt.eda21606.gui.AboutGUI;
-import com.ipt.eda21606.gui.Utils;
+import com.ipt.eda21606.gui.GUIUtils;
 import com.ipt.eda21606.model.CityBean;
 import com.ipt.eda21606.model.GraphBean;
 import com.ipt.eda21606.service.RouteService;
@@ -582,7 +582,7 @@ public class MainGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void menuOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuOpenActionPerformed
-        Utils.executeLongTask(this, "A carregar ficheiro...", () -> {
+        GUIUtils.executeLongTask(this, "A carregar ficheiro...", () -> {
             try {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
@@ -715,7 +715,7 @@ public class MainGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_citiesJListValueChanged
 
     private void menuOpenGraphActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuOpenGraphActionPerformed
-        Utils.executeLongTask(this, "A carregar ficheiro de grafo...", () -> {
+        GUIUtils.executeLongTask(this, "A carregar ficheiro de grafo...", () -> {
             try {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
@@ -741,12 +741,15 @@ public class MainGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_menuOpenGraphActionPerformed
 
     private void doRouteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doRouteBtnActionPerformed
-        Utils.executeLongTask(this, "A fazer rota...", () -> {
+        GUIUtils.executeLongTask(this, "A fazer rota...", () -> {
             // Código para abrir ficheiro
             dijkstraAlgorithmGlobal = new DijkstraAlgorithm(graphGlobal);
             distancesGlobal = dijkstraAlgorithmGlobal.findShortestPath(sourceCity, destinyCity, AUTONOMY_KM);
-            routeTxtBox.setText(route);
-            distancesTxtBox.setText(DistanceUtils.getAllDistancesText(distancesGlobal));
+            SwingUtilities.invokeLater(() -> {
+                routeTxtBox.setText(route);
+                distancesTxtBox.setText(DistanceUtils.getAllDistancesText(distancesGlobal));
+            });
+
         });
     }//GEN-LAST:event_doRouteBtnActionPerformed
 
@@ -792,7 +795,7 @@ public class MainGUI extends javax.swing.JFrame {
             return;
         }
 
-        Utils.executeLongTask(this, "A guardar ficheiro de grafo...", () -> {
+        GUIUtils.executeLongTask(this, "A guardar ficheiro de grafo...", () -> {
             try {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
@@ -816,12 +819,14 @@ public class MainGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_menuSaveActionPerformed
 
     private void buildGraphBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buildGraphBtnActionPerformed
-        Utils.executeLongTask(this, "A consturir grafo...", () -> {
+        GUIUtils.executeLongTask(this, "A consturir grafo...", () -> {
             if (selectedCountries.isEmpty()) {
                 selectedCountries.add("Portugal");
             }
             System.out.println(selectedCountries.size());
             graphGlobal = RouteService.buildGraphCountries(citiesGlobal, selectedCountries);
+            citiesGlobal = graphGlobal.getCities().stream().toList();
+            updateGUILists();
         });
     }//GEN-LAST:event_buildGraphBtnActionPerformed
 

@@ -5,12 +5,14 @@
     <artifactId>eda21606</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>20</maven.compiler.source>
         <maven.compiler.target>20</maven.compiler.target>
-        <exec.mainClass>com.ipt.eda21606.Eda21606</exec.mainClass>
+        <exec.mainClass>com.ipt.eda21606.main.MainGUI</exec.mainClass>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -29,18 +31,56 @@
             <version>5.10.0</version>
             <scope>test</scope>
         </dependency>
-       <!-- Log4j Core -->
-       <dependency>
-           <groupId>org.apache.logging.log4j</groupId>
-           <artifactId>log4j-core</artifactId>
-           <version>2.20.0</version>
-       </dependency>
+        <!-- Log4j Core -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.20.0</version>
+        </dependency>
 
-       <!-- Log4j API -->
-       <dependency>
-           <groupId>org.apache.logging.log4j</groupId>
-           <artifactId>log4j-api</artifactId>
-           <version>2.20.0</version>
-       </dependency>
+        <!-- Log4j API -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.20.0</version>
+        </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Plugin para criar um JAR executável -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.4.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>${exec.mainClass}</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Plugin para compilar o código -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

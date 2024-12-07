@@ -6,11 +6,12 @@ package com.ipt.eda21606.gui;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
-public class Utils {
+public class GUIUtils {
 
     public static <T> T executeLongTaskWithResult(JFrame parentFrame, String message, Supplier<T> task) {
         // Cria o diálogo de loading
@@ -54,32 +55,24 @@ public class Utils {
     }
 
     public static void executeLongTask(JFrame parentFrame, String message, Runnable task) {
-        // Cria o diálogo de loading
+        // Cria o JDialog de loading
         LoadingDialog loadingDialog = new LoadingDialog(parentFrame, message);
 
-        // Tarefa que será executada em segundo plano
-        SwingWorker<Void, Void> worker = new SwingWorker<>() {
-            @Override
-            protected Void doInBackground() throws Exception {
-                // Executar a tarefa fornecida
+        // Executa a tarefa em uma thread separada
+        new Thread(() -> {
+            try {
+                // Executa a tarefa em background
                 task.run();
-                return null;
+            } catch (Exception e) {
+                e.printStackTrace(); // Log de erro (pode ser substituído por logger)
+            } finally {
+                // Após terminar a tarefa, remove o dialog em EDT
+                SwingUtilities.invokeLater(loadingDialog::dispose);
             }
+        }).start();
 
-            @Override
-            protected void done() {
-                // Fechar o diálogo ao finalizar
-                loadingDialog.dispose();
-            }
-        };
-
-        // Exibir o diálogo de loading em outra thread para evitar bloqueio
-        SwingUtilities.invokeLater(() -> {
-            loadingDialog.setVisible(true);
-        });
-
-        // Iniciar a tarefa
-        worker.execute();
+        // Mostra o diálogo de carregamento (bloqueia a interface até ser descartado)
+        loadingDialog.setVisible(true);
     }
 
 }
