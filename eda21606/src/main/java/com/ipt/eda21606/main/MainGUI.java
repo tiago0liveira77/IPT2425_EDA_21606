@@ -651,7 +651,7 @@ public class MainGUI extends javax.swing.JFrame {
                 if (index > -1) {
                     citiesJList.setSelectedIndex(index);
                 } else {
-                    JOptionPane.showMessageDialog(Exception, "", "", JOptionPane.OK_OPTION);
+                    JOptionPane.showMessageDialog(Exception, "Cidade não encontrada", "Erro", JOptionPane.OK_OPTION);
                 }
             } else {
                 throw new Exception();

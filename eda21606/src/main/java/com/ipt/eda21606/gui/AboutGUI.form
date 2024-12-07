@@ -67,7 +67,7 @@
             <Property name="editable" type="boolean" value="false"/>
             <Property name="columns" type="int" value="20"/>
             <Property name="rows" type="int" value="5"/>
-            <Property name="text" type="java.lang.String" value="Esta aplica&#xe7;&#xe3;o foi desenvolvida no &#xe2;mbito da unidade curricular: &#xa;&quot;Estrutura de Dados e Algoritmos&quot; (POO) do curso de LEI do IPT&#xa; no ano letivo 2024-2025 pelo aluno:&#xa;&#xa;21606 - Tiago Oliveira&#xa;&#xa;"/>
+            <Property name="text" type="java.lang.String" value="Esta aplica&#xe7;&#xe3;o foi desenvolvida no &#xe2;mbito da unidade curricular: &#xa;&quot;Estrutura de Dados e Algoritmos&quot; (EDA) do curso de LEI do IPT&#xa; no ano letivo 2024-2025 pelo aluno:&#xa;&#xa;21606 - Tiago Oliveira&#xa;&#xa;"/>
           </Properties>
         </Component>
       </SubComponents>

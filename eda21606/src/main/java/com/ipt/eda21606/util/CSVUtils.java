@@ -34,7 +34,7 @@ public class CSVUtils {
                                     .build());
             }
         } catch (Exception e) {
-            System.err.println("Erro ao ler o arquivo CSV: " + e.getMessage());
+            System.err.println("Erro ao ler o ficheiro CSV: " + e.getMessage());
         }
         return cities;
     }

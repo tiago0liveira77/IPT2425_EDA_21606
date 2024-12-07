@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 public class FileInOutUtils {
 
     private static final Logger logger = LogManager.getLogger(FileInOutUtils.class);
-    
+
     public static File fileInputRaw = new File(INPUT_RAW_FILE_PATH);
     public static File fileInputGraph = new File(INPUT_GRAPH_FILE_PATH);
 
@@ -36,7 +36,6 @@ public class FileInOutUtils {
                 if ("city".equals(fields[0])) {
                     continue;
                 }
-
 
                 // Constrói o objeto CityBean com os valores relevantes
                 cities.add(CityBean.builder()

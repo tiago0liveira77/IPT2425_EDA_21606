@@ -35,7 +35,7 @@ public class AboutGUI extends javax.swing.JDialog {
         jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
-        jTextArea1.setText("Esta aplicação foi desenvolvida no âmbito da unidade curricular: \n\"Estrutura de Dados e Algoritmos\" (POO) do curso de LEI do IPT\n no ano letivo 2024-2025 pelo aluno:\n\n21606 - Tiago Oliveira\n\n");
+        jTextArea1.setText("Esta aplicação foi desenvolvida no âmbito da unidade curricular: \n\"Estrutura de Dados e Algoritmos\" (EDA) do curso de LEI do IPT\n no ano letivo 2024-2025 pelo aluno:\n\n21606 - Tiago Oliveira\n\n");
         jScrollPane1.setViewportView(jTextArea1);
 
         MainMenuAcercaDeBtnClose1.setText("Fechar");

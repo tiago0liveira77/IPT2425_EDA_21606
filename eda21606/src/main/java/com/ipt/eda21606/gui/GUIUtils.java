@@ -13,6 +13,7 @@ import javax.swing.SwingWorker;
 
 public class GUIUtils {
 
+    //Metodo para executar funçoes em background e devolver algo
     public static <T> T executeLongTaskWithResult(JFrame parentFrame, String message, Supplier<T> task) {
         // Cria o diálogo de loading
         LoadingDialog loadingDialog = new LoadingDialog(parentFrame, message);
@@ -54,6 +55,7 @@ public class GUIUtils {
         return result.get();
     }
 
+     //Metodo para executar funçoes em background
     public static void executeLongTask(JFrame parentFrame, String message, Runnable task) {
         // Cria o JDialog de loading
         LoadingDialog loadingDialog = new LoadingDialog(parentFrame, message);

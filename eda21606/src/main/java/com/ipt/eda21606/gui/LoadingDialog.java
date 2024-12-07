@@ -6,6 +6,7 @@ package com.ipt.eda21606.gui;
 import javax.swing.*;
 import java.awt.*;
 
+//Classe simples customizada de um JDialog
 public class LoadingDialog  extends JDialog {
     public LoadingDialog(Frame parent, String message) {
         super(parent, "Loading", true);

@@ -25,15 +25,14 @@ public class DijkstraAlgorithm {
 
     public Map<CityBean, Double> findShortestPath(CityBean start, CityBean end, double autonomy) {
         if (start == null || end == null) {
-            if (logger.isErrorEnabled()){
-                logger.error("UMA DAS CIDADES NÃO EXISTE");     
+            if (logger.isErrorEnabled()) {
+                logger.error("UMA DAS CIDADES NÃO EXISTE");
             }
             return null;
         }
         if (logger.isDebugEnabled()) {
             logger.debug("|-> |FindShortestPath| From: " + start.getName() + " To: " + end.getName());
         }
-        //double autonomy = VEHICLE_AUTONOMY_KM_OLD;
         Map<CityBean, Double> distances = new HashMap<>(); // Mapa de distâncias mínimas
         Map<CityBean, CityBean> predecessors = new HashMap<>(); // Mapa de predecessores
         Set<CityBean> unvisitedCities = new HashSet<>(); // Conjunto de cidades não visitadas
@@ -74,10 +73,10 @@ public class DijkstraAlgorithm {
 
             // Atualiza as distâncias para os vizinhos
             for (CityBean neighbor : graph.getAdjacencies(currentCityBean)) {
-                if (neighbor == null){
+                if (neighbor == null) {
                     if (logger.isDebugEnabled()) {
-                    logger.debug("|---> neighbor null");
-                }
+                        logger.debug("|---> neighbor null");
+                    }
                     continue;
                 }
                 if (logger.isDebugEnabled()) {
@@ -129,35 +128,34 @@ public class DijkstraAlgorithm {
             }
             Collections.reverse(path);
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("|----> Shortest path: " + path.stream().map(CityBean::getName).toList());
+            // Adicionando o log da distância entre cada aresta no caminho
+            StringBuilder outputRoute = new StringBuilder();
+            double totalDistance = 0.0;
+
+            for (int i = 0; i < path.size() - 1; i++) {
+                CityBean from = path.get(i);
+                CityBean to = path.get(i + 1);
+                double edgeDistance = DistanceUtils.calculateDistance(
+                        from.getLatitude(), from.getLongitude(),
+                        to.getLatitude(), to.getLongitude()
+                );
+
+                outputRoute.append(String.format("%s -> %s = %.2f \n", from.getName(), to.getName(), edgeDistance));
+                totalDistance += edgeDistance;
+
+                // Log da distância (se o log de depuração estiver ativo)
+                if (logger.isDebugEnabled()) {
+                    logger.debug("|-------> From " + from.getName() + " to " + to.getName() + ": " + edgeDistance + " km");
+                }
             }
 
-            // Adicionando o log da distância entre cada aresta no caminho
-            if (path.size() > 1 && logger.isDebugEnabled()) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("|----> Edge distances:");
-                }
-                StringBuilder outputRoute = new StringBuilder();
-                double totalDistance = 0.0;
-                for (int i = 0; i < path.size() - 1; i++) {
-                    CityBean from = path.get(i);
-                    CityBean to = path.get(i + 1);
-                    double edgeDistance = DistanceUtils.calculateDistance(
-                            from.getLatitude(), from.getLongitude(),
-                            to.getLatitude(), to.getLongitude()
-                    );
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("|-------> From " + from.getName() + " to " + to.getName() + ": " + edgeDistance + " km");
-                    }
-                    outputRoute.append(String.format("%s -> %s = %.2f \n", from.getName(), to.getName(), edgeDistance));
-                    totalDistance += edgeDistance;
-                }
-                outputRoute.append("Distancia total: " + totalDistance);
-                MainGUI.route = outputRoute.toString();
-                if (logger.isDebugEnabled()) {
-                    logger.debug("|-------------------------------------------------------------------------------------");
-                }
+            outputRoute.append("Distancia total: ").append(totalDistance);
+            MainGUI.route = outputRoute.toString(); // Atribuir a string ao `route`
+
+            // Log do caminho completo (se o log de depuração estiver ativo)
+            if (logger.isDebugEnabled()) {
+                logger.debug("|----> Shortest path: " + path.stream().map(CityBean::getName).toList());
+                logger.debug("|-------------------------------------------------------------------------------------");
             }
 
         } else {
@@ -170,6 +168,7 @@ public class DijkstraAlgorithm {
         return distances; // Retorna o mapa de distâncias calculadas
     }
 
+    //obter cidade mais perto
     private CityBean getCityBeanWithMinimumDistance(Set<CityBean> unvisitedCities, Map<CityBean, Double> distances) {
         CityBean minCityBean = null;
         double minDistance = Double.POSITIVE_INFINITY;

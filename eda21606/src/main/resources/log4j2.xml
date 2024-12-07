@@ -14,9 +14,9 @@
 
     <Loggers>
         <!-- Logger raiz (aplica a todas as classes) -->
-        <Root level="debug"> <!-- Ajustando o nível para debug -->
+        <!--  <Root level="debug">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="FileLogger"/>
-        </Root>    
+        </Root>  -->  
     </Loggers>
 </Configuration>
